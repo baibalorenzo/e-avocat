@@ -1,0 +1,12 @@
+.THIS {
+    
+}
+
+@media print{
+    .THIS .desktop *{
+        visibility: hidden;
+    }
+	.THIS .print-container,.THIS .print-container *{
+        visibility: visible;
+    }
+}

@@ -1,0 +1,118 @@
+<aura:component controller="EmailMessageComp" 
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access    ="global">
+    
+    <!---Part 1 [for attribute declare]-->
+    <!-- attribute to accept Visualforce page's javascript method -->
+    <!--<aura:attribute name="sendData" type="object"/>-->
+    <!--<aura:attribute name="dossierId"  type="string" />-->
+    <aura:attribute name="email"      type="string" />
+    <aura:attribute name="subject"    type="string" />
+    <aura:attribute name="body"       type="string" access="global"/>
+    <aura:attribute name="mailStatus" type="boolean" default="false" />
+    <aura:attribute name="emailfolderVSTemplateList" type="object[]" default="[]" />
+    <aura:attribute name="emailFolderList"           type="object[]" default="[]" />
+    <aura:attribute name="emailTemplateList"         type="object[]" default="[]" />
+    <aura:attribute name="emailbody"           type="String" default="" />
+    <aura:attribute name="objectIdToContent"   type="String" default="" />
+    <aura:attribute name="folderId"            type="String" default="" />
+    <aura:attribute name="templateIDs"         type="String" default="" />
+	
+    
+    <!--<aura:attribute name="pdfData" type="String"/>-->
+	<!--<aura:attribute name="pdfContainer" type="Aura.Component[]"/>-->
+    
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}" />
+        <div class="slds-modal__content">
+            <header class="slds-modal__header">
+                <h4 class="slds-text-heading_medium slds-hyphenate ">
+                    Créer un courrier
+                </h4>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <!---Part 2 [header part] -->
+                <div class="slds-m-around--medium">
+                    <div class="slds-container--medium">
+                        <div class="slds-form--stacked">
+                            <!--Test for template -->
+                            <label><b></b></label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element slds-no-print" aura:id="selectFolder">
+                                    <label class="slds-form-element__label" for="select-Folder">
+                                        Sélectionner un dossier
+                                    </label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <select class="slds-select" id="select-Folder"
+                                                    onchange="{!c.onSelectEmailFolder}">
+                                                <option value="">Choisissez un dossier</option>
+                                                <aura:iteration items="{!v.emailfolderVSTemplateList}" var="folder">
+                                                    <option value="{!folder.folderId}">{!folder.folderName}</option>
+                                                </aura:iteration>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element slds-no-print" aura:id="selectTemplate">
+                                    <label class="slds-form-element__label" for="select-Template">
+                                        Sélectionner un modèle
+                                    </label>
+                                    <div class="slds-form-element__control slds-no-print">
+                                        <div class="slds-select_container ">
+                                            <select class="slds-select" id="select-Template"
+                                                    onchange="{!c.onSelectEmailTemplate}">
+                                                <option value="">Choisissez un modèle</option>
+                                                <aura:iteration items="{!v.emailTemplateList}" var="template">
+                                                    <option value="{!template.emailTemplateId}">
+                                                        {!template.emailTemplatename}
+                                                    </option>
+                                                </aura:iteration>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                               <!---Part 3 [Template content getted as form part]--> 
+                                <div  class="slds-form-element ">
+                                    <lightning:recordEditForm recordId="{!v.recordId}"
+                                                              objectApiName="Dossier__c">
+                                        <lightning:messages />
+                                        <div class="print-container slds-grid slds-col 
+                                                    slds-is-editing slds-has-flexi-truncate 
+                                                    mdp forcePageBlockItem forcePageBlockItemEdit">
+                                            <lightning:inputField fieldName="Email_Body__c" value="{!v.emailbody}"/>
+                                        </div>
+                                        <div>
+                                            <lightning:button class="slds-m-top_small" 
+                                                              type="cancel" 
+                                                              label="Annuler" 
+                                                              onclick="{!c.closeMessage}" />
+                                            <lightning:button class="slds-m-top_small slds-button_brand" 
+                                                              type="submit" 
+                                                              label="Visualiser" 
+                                                              onclick="{!c.printPageAction}" /> 
+                                            <!--<lightning:button class="slds-m-top_small slds-button_brand" 
+                                                              type="submit" 
+                                                              label="Attacher" 
+                                                              onclick="{!c.attachAction}" />-->
+                                           
+                                        </div>
+                                    </lightning:recordEditForm>
+                                    <div> 
+                                        <br/>
+                                        <lightning:fileUpload label="Télécharger le courrier"
+                                                              name="fileUploader"
+                                                              multiple="true"
+                                                              accept=".pdf, .png"
+                                                              recordId="{!v.recordId}"
+                                                              onuploadfinished="{!c.handleUploadFinished}" />
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>      
+
+</aura:component>

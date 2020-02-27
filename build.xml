@@ -35,7 +35,7 @@
   <!-- Deploy the retrieveSource set of metadata retrieved with retrieveSource and run tests in this organization's namespace only-->
   <target name="deploy">
     <sf:deploy 
-        usernam         = "${sf.username}" 
+        username        = "${sf.username}" 
         password        = "${sf.password}" 
         sessionId       = "${sf.sessionId}" 
         serverurl       = "${sf.serverurl}" 
